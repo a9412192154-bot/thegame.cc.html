@@ -37,10 +37,29 @@
         .analysis-box { background: #FFF0F3; padding: 20px; border-radius: 20px; margin-top: 15px; font-size: 0.95rem; line-height: 1.6; }
         
         .selector-box { background: white; border-radius: 30px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .scroll-row { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .scroll-row { 
+            display: flex; 
+            gap: 10px; 
+            overflow-x: auto; 
+            padding: 10px 0; 
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
+        }
         .scroll-row::-webkit-scrollbar { display: none; }
-        .opt-btn { min-width: 80px; padding: 12px; background: #F9F9F9; border-radius: 15px; border: 2px solid transparent; font-size: 0.9rem; text-align: center; flex-shrink: 0; font-weight: bold; cursor: pointer; }
-        .opt-btn.active { border-color: var(--primary); background: #FFF0F3; color: var(--primary); }
+        .opt-btn { 
+            min-width: 85px; 
+            padding: 12px; 
+            background: #F9F9F9; 
+            border-radius: 15px; 
+            border: 2px solid transparent; 
+            font-size: 0.9rem; 
+            text-align: center; 
+            flex-shrink: 0; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+        .opt-btn.active { border-color: var(--primary); background: #FFF0F3; color: var(--primary); transform: scale(1.05); }
         .go-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; margin-top: 20px; cursor: pointer; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -51,7 +70,7 @@
 <div id="landing-page">
     <img src="images.PNG" class="cover-img" alt="Sanrio Main Image">
     <div class="start-title">三麗鷗靈魂伴侶診斷</div>
-    <p style="color: #999; margin-bottom: 35px;">這張圖片將開啟你的奇幻旅程</p>
+    <p style="color: #999; margin-bottom: 35px;">看看誰才是妳的真命天子？</p>
     <button class="start-btn" onclick="startQuiz()">進入測驗</button>
 </div>
 
@@ -63,20 +82,32 @@
     </div>
 
     <div class="selector-box">
-        <p><b>✨ 選擇你的星座</b></p>
+        <p><b>✨ 選擇妳的星座 (左右滑動)</b></p>
         <div class="scroll-row" id="zGroup">
-            <div class="opt-btn" onclick="sel(this,'z','天蠍')">天蠍</div>
             <div class="opt-btn" onclick="sel(this,'z','牡羊')">牡羊</div>
+            <div class="opt-btn" onclick="sel(this,'z','金牛')">金牛</div>
             <div class="opt-btn" onclick="sel(this,'z','雙子')">雙子</div>
             <div class="opt-btn" onclick="sel(this,'z','巨蟹')">巨蟹</div>
+            <div class="opt-btn" onclick="sel(this,'z','獅子')">獅子</div>
+            <div class="opt-btn" onclick="sel(this,'z','處女')">處女</div>
+            <div class="opt-btn" onclick="sel(this,'z','天秤')">天秤</div>
+            <div class="opt-btn" onclick="sel(this,'z','天蠍')">天蠍</div>
+            <div class="opt-btn" onclick="sel(this,'z','射手')">射手</div>
             <div class="opt-btn" onclick="sel(this,'z','摩羯')">摩羯</div>
+            <div class="opt-btn" onclick="sel(this,'z','水瓶')">水瓶</div>
+            <div class="opt-btn" onclick="sel(this,'z','雙魚')">雙魚</div>
         </div>
-        <p><b>🎀 靈魂角色感應</b></p>
+        
+        <p><b>🎀 妳最有感的角色</b></p>
         <div class="scroll-row" id="cGroup">
             <div class="opt-btn" onclick="sel(this,'c','酷洛米')">酷洛米</div>
-            <div class="opt-btn" onclick="sel(this,'c','布丁狗')">布丁狗</div>
-            <div class="opt-btn" onclick="sel(this,'c','大耳狗')">大耳狗</div>
             <div class="opt-btn" onclick="sel(this,'c','美樂蒂')">美樂蒂</div>
+            <div class="opt-btn" onclick="sel(this,'c','大耳狗')">大耳狗</div>
+            <div class="opt-btn" onclick="sel(this,'c','布丁狗')">布丁狗</div>
+            <div class="opt-btn" onclick="sel(this,'c','帕恰狗')">帕恰狗</div>
+            <div class="opt-btn" onclick="sel(this,'c','Kitty')">Kitty</div>
+            <div class="opt-btn" onclick="sel(this,'c','蛋黃哥')">蛋黃哥</div>
+            <div class="opt-btn" onclick="sel(this,'c','大眼蛙')">大眼蛙</div>
         </div>
         <button class="go-btn" onclick="generate()">開始分析</button>
     </div>
@@ -101,9 +132,18 @@
         if(!curZ || !curC) return alert("請先選擇星座與角色！");
         document.getElementById('res-card').style.display = 'block';
         document.getElementById('res-name').innerText = `${curZ}座的${curC}`;
-        document.getElementById('res-spark').innerHTML = `<b>✨ 靈魂感應結果：</b><br>在三麗鷗的世界裡，你展現了${curC}獨特的氣質，與${curZ}座的性格完美融合！`;
         
-        drawChart([Math.floor(Math.random()*20+80), Math.floor(Math.random()*30+70), 90, 85, 95]);
+        const insights = [
+            `這是一個完美的組合！${curZ}座的細膩碰上${curC}的可愛，簡直是靈魂共鳴。`,
+            `妳們的契合度超乎想像！${curC}能完全理解${curZ}座內心的柔軟。`,
+            `充滿驚喜的相遇！雖然性格略有不同，但${curC}會是妳最好的陪伴者。`
+        ];
+        document.getElementById('res-spark').innerHTML = `<b>✨ 碰撞分析：</b><br>${insights[Math.floor(Math.random()*insights.length)]}`;
+        
+        // 隨機生成分數讓雷達圖每次都不一樣
+        const scores = Array.from({length: 5}, () => Math.floor(Math.random() * 20) + 80);
+        drawChart(scores);
+        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
